@@ -94,7 +94,7 @@ async function ensurePlayer(env, user) {
   await env.DB.prepare(`
     INSERT INTO wheel_players
       (telegram_id, username, first_name, spins_available, updated_at)
-    VALUES (?, ?, ?, 0, ?)
+    VALUES (?, ?, ?, 1, ?)
     ON CONFLICT(telegram_id) DO UPDATE SET
       username = excluded.username,
       first_name = excluded.first_name,
