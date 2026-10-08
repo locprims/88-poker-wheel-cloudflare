@@ -1,0 +1,29 @@
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#050505;color:#f7e2ad;font-family:Arial,Helvetica,sans-serif}
+body{background:radial-gradient(circle at 50% 15%,#282014 0,#0b0a08 32%,#030303 70%)}
+.app{width:min(94vw,720px);margin:auto;text-align:center;padding:22px 14px 40px}.logo{width:min(250px,55vw);max-height:160px;object-fit:contain}
+.eyebrow{letter-spacing:.28em;font-size:12px;color:#d7b66c}h1{margin:5px 0;font-size:clamp(28px,7vw,48px);color:#f5d789}.subtitle{margin:4px 0 18px;color:#c9b889}
+.wheel-wrap{position:relative;width:min(90vw,610px);aspect-ratio:1;margin:auto}.wheel-wrap canvas{display:block;width:100%;height:100%;border-radius:50%;transition:transform 5.6s cubic-bezier(.12,.72,.08,1)}
+.pointer{position:absolute;z-index:6;left:50%;top:-14px;transform:translateX(-50%);width:48px;height:58px;border-left:0;border-right:0;border-top:0;background:linear-gradient(135deg,#fff1a6 0%,#e5ad3f 30%,#9a590e 67%,#f3ca67 100%);clip-path:polygon(0 0,100% 0,50% 100%);filter:drop-shadow(0 3px 1px #4a2906) drop-shadow(0 0 8px rgba(255,190,57,.55))}
+.pointer:after{content:"";position:absolute;left:8px;top:7px;width:32px;height:34px;background:linear-gradient(145deg,#171009,#55300b);clip-path:polygon(0 0,100% 0,50% 100%)}
+.spin{position:absolute;z-index:5;left:50%;top:50%;transform:translate(-50%,-50%);width:108px;height:108px;border-radius:50%;border:5px solid #d8a84f;background:radial-gradient(circle,#f5d789,#9b651b);font-size:20px;font-weight:900;cursor:pointer}.spin:disabled{opacity:.45;cursor:not-allowed}
+.result{margin:20px auto 12px;font-size:25px;font-weight:900;min-height:34px;color:#f5d789;position:relative;z-index:3}
+#celebration{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:20}
+.note{font-size:12px;color:#807866;margin-top:14px}
+@media(max-width:520px){.logo{max-height:120px}.spin{width:86px;height:86px;font-size:17px}}
+body{margin:0;background:#050505 url("/static/poker-lucky-background.webp?v=9") center top/cover fixed no-repeat;color:#f7e7b1;font-family:Arial,sans-serif;text-align:center;position:relative}
+body:before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.42);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1}
+
+/* V11 — premium win celebration (no falling chips) */
+.win-overlay{position:fixed;inset:0;z-index:19;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:none;opacity:0;background:radial-gradient(circle at center,rgba(90,35,4,.38),rgba(0,0,0,.76) 62%,rgba(0,0,0,.86));transition:opacity .22s ease}
+.win-overlay.show{opacity:1}
+.win-card{width:min(88vw,520px);text-align:center;transform:scale(.25);opacity:0}
+.win-overlay.show .win-card{animation:winCardPop .78s cubic-bezier(.16,.95,.22,1.28) forwards}
+.win-crown{font-size:clamp(42px,10vw,70px);line-height:1;color:#ffd75d;text-shadow:0 0 12px #e58a00,0 0 30px rgba(255,157,0,.65);margin-bottom:8px}
+.win-cn{font-size:clamp(28px,7vw,48px);font-weight:1000;letter-spacing:.08em;color:#fff0ad;text-shadow:0 2px 0 #8d4b00,0 0 12px #ff9f00,0 0 30px rgba(255,137,0,.7);margin-bottom:16px}
+.win-amount{margin:auto;width:min(88vw,440px);padding:20px 12px 23px;border:7px solid #e7b54a;border-radius:32px;background:radial-gradient(circle,#501d06 0,#1a0904 72%);box-shadow:0 0 0 3px #754006,0 0 38px rgba(255,169,31,.7),inset 0 0 28px rgba(255,151,21,.22);font-size:clamp(72px,20vw,130px);line-height:.95;font-weight:1000;letter-spacing:-.055em;color:#fff6cf;text-shadow:0 3px 0 #824600,0 0 12px #ffb51d,0 0 38px #d86500}
+.win-label{margin-top:17px;font-size:clamp(17px,4.5vw,25px);font-weight:1000;letter-spacing:.18em;color:#ffd65b;text-shadow:0 0 14px rgba(255,171,22,.72)}
+.win-overlay.jackpot .win-amount{animation:jackpotPulse .65s ease-in-out .75s 3 alternate}
+@keyframes winCardPop{0%{transform:scale(.25) rotate(-3deg);opacity:0}55%{transform:scale(1.1) rotate(1deg);opacity:1}78%{transform:scale(.96)}100%{transform:scale(1);opacity:1}}
+@keyframes jackpotPulse{from{box-shadow:0 0 0 3px #754006,0 0 38px rgba(255,169,31,.7),inset 0 0 28px rgba(255,151,21,.22)}to{box-shadow:0 0 0 4px #ffe08a,0 0 75px rgba(255,191,45,.95),inset 0 0 42px rgba(255,185,38,.38)}}
+@media(prefers-reduced-motion:reduce){.win-overlay.show .win-card,.win-overlay.jackpot .win-amount{animation:none}.win-card{transform:none;opacity:1}}
