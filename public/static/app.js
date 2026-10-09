@@ -95,8 +95,10 @@ function updateSpinStatus(count){
   if(!Number.isFinite(parsed)) return;
   remainingSpins=Math.max(0,Math.floor(parsed));
   statusEl.textContent=remainingSpins>0
-    ? `✅ ${remainingSpins} tour${remainingSpins>1?"s":""} disponible${remainingSpins>1?"s":""}`
-    : "🔒 Aucun tour disponible — validation requise";
+    ? `${remainingSpins} 次抽奖机会可用`
+    : "暂无抽奖机会 · 请等待审核";
+  document.getElementById("status-panel").dataset.state=remainingSpins>0?"available":"empty";
+  document.querySelector(".status-icon").textContent=remainingSpins>0?"✓":"🔒";
   btn.disabled=busy || remainingSpins===0;
 }
 async function load(){
@@ -108,7 +110,9 @@ async function load(){
     if(sequence===refreshSequence) updateSpinStatus(d.spins_available);
   }catch(e){
     if(sequence===refreshSequence){
-      statusEl.textContent="Impossible de vérifier les crédits. Réessayez.";
+      statusEl.textContent="验证失败，请稍后重试。";
+      document.getElementById("status-panel").dataset.state="error";
+      document.querySelector(".status-icon").textContent="!";
       btn.disabled=true;
     }
   }
@@ -210,4 +214,5 @@ function safeCelebrate(prize){
     window.__winOverlayTimer=setTimeout(()=>overlay.classList.remove("show"),3600);
   }catch(e){}
 }
+
 
