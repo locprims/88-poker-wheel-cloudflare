@@ -1,3 +1,5 @@
+console.log("LUCKY WHEEL TEST DEPLOY V15");
+
 const prizes=[10,20,30,40,50,88], canvas=document.getElementById("wheel"),ctx=canvas.getContext("2d"),btn=document.getElementById("spin"),statusEl=document.getElementById("status"),result=document.getElementById("result");
 let rotation=0,busy=false;const arc=Math.PI*2/prizes.length;
 function draw(){
