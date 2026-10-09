@@ -1,13 +1,13 @@
-<!doctype html><html lang="fr"><head>
+<!doctype html><html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>88 Poker Club — Lucky Wheel</title><link rel="stylesheet" href="/static/style.css?v=14-credits">
+<title>88 Poker Club — 幸运转盘</title><link rel="stylesheet" href="/static/style.css?v=16-cn-status">
 <script src="https://telegram.org/js/telegram-web-app.js"></script></head>
 <body><canvas id="celebration" aria-hidden="true"></canvas><div id="win-overlay" class="win-overlay" aria-hidden="true"><div class="win-card"><div class="win-crown">♛</div><div class="win-cn">恭喜中奖！</div><div id="win-amount" class="win-amount">88 $</div><div id="win-label" class="win-label">★ 88 POKER CLUB ★</div></div></div><main class="app">
 <img class="logo" src="/static/88-poker-logo.png" alt="88 Poker Club">
-<div class="eyebrow">88 POKER CLUB</div><h1>LUCKY WHEEL</h1>
-<p id="status" class="subtitle">Vérification de votre invitation…</p>
+<div class="eyebrow">88 POKER CLUB</div><h1 class="wheel-heading">幸运转盘</h1>
+<div class="status-panel" id="status-panel" data-state="loading"><span class="status-icon" aria-hidden="true">✓</span><div class="status-copy"><span class="status-caption">抽奖资格 · 88 POKER CLUB</span><p id="status" class="subtitle" aria-live="polite">正在验证您的抽奖资格…</p></div></div>
 <section class="wheel-wrap"><div class="pointer"></div><canvas id="wheel" width="900" height="900"></canvas>
-<button id="spin" class="spin" type="button" disabled>SPIN</button></section>
+<button id="spin" class="spin" type="button" disabled>抽奖</button></section>
 <div id="result" class="result" aria-live="polite"></div>
-<p class="note">Un tour est disponible uniquement après validation par 88 Poker Club.</p>
-</main><script src="/static/app.js?v=15-consecutive-fix"></script></body></html>
+<p class="note">抽奖机会需经 88 Poker Club 审核后方可使用。</p>
+</main><script src="/static/app.js?v=16-cn-status"></script></body></html>
