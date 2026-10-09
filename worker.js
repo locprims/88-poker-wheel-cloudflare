@@ -1,11 +1,13 @@
 const PRIZES = [
-  [10, 50],
-  [20, 25],
-  [30, 13],
-  [40, 7],
-  [50, 4],
+  [10, 70],
+  [20, 15],
+  [30, 8],
+  [40, 4],
+  [50, 2],
   [88, 1],
 ];
+
+const PROMO_PRIZES = [[30, 70], [40, 20], [50, 9], [88, 1]];
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -107,27 +109,27 @@ async function ensurePlayer(env, user) {
   ).run();
 
   return env.DB.prepare(`
-    SELECT telegram_id, username, first_name, spins_available, updated_at
+    SELECT telegram_id, username, first_name, spins_available, promo_30, updated_at
     FROM wheel_players
     WHERE telegram_id = ?
   `).bind(tid).first();
 }
 
-function pickPrize() {
+function pickPrize(isPromo = false) {
   const n = crypto.getRandomValues(new Uint32Array(1))[0] % 100 + 1;
   let acc = 0;
-  for (const [prize, weight] of PRIZES) {
+  for (const [prize, weight] of (isPromo ? PROMO_PRIZES : PRIZES)) {
     acc += weight;
     if (n <= acc) return prize;
   }
-  return 10;
+  throw new Error("Invalid prize configuration");
 }
 
 async function apiMe(request, env) {
   const user = await currentUser(request, env);
   if (!user) return json({ error: "telegram_auth_required" }, 401);
   const player = await ensurePlayer(env, user);
-  return json(player);
+  return json({ ...player, odds: Number(player.promo_30) === 1 ? PROMO_PRIZES : PRIZES });
 }
 
 async function apiSpin(request, env) {
@@ -150,7 +152,8 @@ async function apiSpin(request, env) {
     return json({ error: "no_spin_available" }, 403);
   }
 
-  const prize = pickPrize();
+  const profile = await env.DB.prepare(`SELECT promo_30 FROM wheel_players WHERE telegram_id = ?`).bind(tid).first();
+  const prize = pickPrize(Number(profile?.promo_30) === 1);
 
   try {
     const inserted = await env.DB.prepare(`
