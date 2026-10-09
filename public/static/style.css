@@ -27,3 +27,15 @@ body:before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.42);pointer
 @keyframes winCardPop{0%{transform:scale(.25) rotate(-3deg);opacity:0}55%{transform:scale(1.1) rotate(1deg);opacity:1}78%{transform:scale(.96)}100%{transform:scale(1);opacity:1}}
 @keyframes jackpotPulse{from{box-shadow:0 0 0 3px #754006,0 0 38px rgba(255,169,31,.7),inset 0 0 28px rgba(255,151,21,.22)}to{box-shadow:0 0 0 4px #ffe08a,0 0 75px rgba(255,191,45,.95),inset 0 0 42px rgba(255,185,38,.38)}}
 @media(prefers-reduced-motion:reduce){.win-overlay.show .win-card,.win-overlay.jackpot .win-amount{animation:none}.win-card{transform:none;opacity:1}}
+
+
+/* V16 — Chinese premium heading and dynamic credit badge */
+.wheel-heading{margin:5px auto 12px;font-weight:900;letter-spacing:.12em;font-size:clamp(31px,8vw,52px);line-height:1.25;background:linear-gradient(180deg,#fff6c8 0%,#ffd876 34%,#c98b29 76%,#fff1ad 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px #4b2705) drop-shadow(0 0 12px rgba(244,167,43,.32))}
+.status-panel{display:flex;align-items:center;justify-content:center;gap:12px;width:min(94%,460px);min-height:78px;margin:0 auto 24px;padding:12px 16px;border:2px solid #dbb65a;border-radius:19px;background:linear-gradient(115deg,rgba(4,85,43,.96),rgba(2,35,25,.97) 70%,rgba(6,82,48,.94));box-shadow:0 0 0 1px rgba(255,224,132,.2),0 8px 24px rgba(0,0,0,.4),inset 0 0 24px rgba(17,183,80,.16),0 0 18px rgba(223,167,49,.18);text-align:left}
+.status-icon{flex:0 0 47px;height:47px;display:grid;place-items:center;border:2px solid #a5f8a6;border-radius:12px;background:linear-gradient(145deg,#0ae751,#00852e);box-shadow:0 0 14px rgba(15,246,90,.4),inset 0 1px 8px rgba(255,255,255,.23);color:#fff;font-size:29px;font-weight:900;text-shadow:0 1px 2px #08612a}
+.status-copy{min-width:0}.status-caption{display:block;font-size:10px;letter-spacing:.12em;font-weight:800;color:#cdbb86;margin-bottom:5px}
+.status-panel .subtitle{margin:0;color:#fff0bd;font-size:clamp(15px,4.2vw,20px);line-height:1.35;font-weight:800;text-shadow:0 1px 5px rgba(0,0,0,.45)}
+.status-panel[data-state="empty"]{background:linear-gradient(115deg,#403016,#181b18)}.status-panel[data-state="empty"] .status-icon{background:linear-gradient(145deg,#a28a55,#65512d);border-color:#e4c987;box-shadow:none}
+.status-panel[data-state="error"]{border-color:#d97e64}.status-panel[data-state="error"] .status-icon{background:linear-gradient(145deg,#ba553f,#71271c);border-color:#f0aa93;box-shadow:none}
+.status-panel[data-state="loading"] .status-icon{opacity:.65}
+@media(max-width:390px){.status-panel{gap:9px;padding:10px 11px}.status-icon{flex-basis:40px;height:40px;font-size:25px}.status-caption{font-size:9px}}
