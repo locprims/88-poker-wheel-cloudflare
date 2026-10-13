@@ -146,28 +146,28 @@ function draw() {
     ctx.strokeStyle = "#e9bc5b";
     ctx.stroke();
 
-    // Montants des lots
-    ctx.save();
-    ctx.translate(c, c);
-    ctx.rotate(s + arc / 2);
+    // Montants horizontaux, centrés dans chaque secteur.
+    // Le texte ne tourne pas avec le rayon du secteur.
+    const middle = s + arc / 2;
+    const textRadius = 263;
+    const tx = c + textRadius * Math.cos(middle);
+    const ty = c + textRadius * Math.sin(middle);
 
-    ctx.textAlign = "right";
+    ctx.save();
+    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.shadowColor = "rgba(0,0,0,.9)";
     ctx.shadowBlur = 8;
     ctx.shadowOffsetY = 3;
     ctx.fillStyle = "#fff0bd";
     ctx.font = `900 ${p === 888 ? 48 : 54}px Arial`;
+    ctx.fillText(`${p} $`, tx, p === 888 ? ty - 16 : ty);
 
-    ctx.fillText(p + " $", r - 52, 0);
-
-    // Jackpot uniquement pour 888 $
     if (p === 888) {
-      ctx.font = "900 21px Arial";
+      ctx.font = "900 20px Arial";
       ctx.fillStyle = "#ffd76d";
-      ctx.fillText("JACKPOT", r - 57, 38);
+      ctx.fillText("JACKPOT", tx, ty + 32);
     }
-
     ctx.restore();
   });
 
@@ -551,4 +551,3 @@ function safeCelebrate(prize) {
     console.error("Celebration error:", e);
   }
 }
-
