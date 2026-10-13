@@ -20,68 +20,62 @@ function draw() {
   const c = 450;
   const r = 366;
   const TAU = Math.PI * 2;
+  const circle = (radius, fill) => {
+    ctx.beginPath();
+    ctx.arc(c, c, radius, 0, TAU);
+    ctx.fillStyle = fill;
+    ctx.fill();
+  };
+  const ring = (radius, width, color) => {
+    ctx.beginPath();
+    ctx.arc(c, c, radius, 0, TAU);
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+  };
 
-  ctx.clearRect(0, 0, 900, 900);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
 
-  // Ombre extérieure
-  ctx.beginPath();
-  ctx.arc(c, c, 425, 0, TAU);
-  ctx.shadowColor = "rgba(0,0,0,.9)";
-  ctx.shadowBlur = 34;
-  ctx.shadowOffsetY = 15;
-  ctx.fillStyle = "#050403";
-  ctx.fill();
-  ctx.shadowColor = "transparent";
+  // Thick 3D shadow beneath the metal wheel.
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,.95)";
+  ctx.shadowBlur = 36;
+  ctx.shadowOffsetY = 19;
+  circle(427, "#100903");
+  ctx.restore();
+  circle(430, "#2b1505");
 
-  // Anneaux métalliques dorés
-  const rim = ctx.createRadialGradient(
-    c - 95, c - 120, 80, c, c, 430
-  );
+  // Concentric metal layers, with directional highlights.
+  const metal = ctx.createLinearGradient(70, 45, 835, 835);
+  metal.addColorStop(0, "#fff4bc");
+  metal.addColorStop(.13, "#b87319");
+  metal.addColorStop(.28, "#ffe18a");
+  metal.addColorStop(.46, "#76400b");
+  metal.addColorStop(.64, "#ffd475");
+  metal.addColorStop(.82, "#a96312");
+  metal.addColorStop(1, "#fff0a3");
+  circle(426, metal);
+  ring(422, 4, "rgba(255,250,208,.86)");
+  circle(413, "#3d2109");
+  ring(409, 9, "#100b05");
+  ring(402, 5, "#e8ae43");
+  ring(394, 3, "#fff0b4");
+  circle(386, "#100b08");
 
-  rim.addColorStop(0, "#fff0a4");
-  rim.addColorStop(.22, "#b87518");
-  rim.addColorStop(.5, "#fff0a0");
-  rim.addColorStop(.72, "#7a430c");
-  rim.addColorStop(1, "#f4c55d");
-
-  ctx.beginPath();
-  ctx.arc(c, c, 424, 0, TAU);
-  ctx.fillStyle = rim;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(c, c, 406, 0, TAU);
-  ctx.fillStyle = "#090704";
-  ctx.fill();
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "#f7d26e";
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(c, c, 390, 0, TAU);
-  ctx.lineWidth = 9;
-  ctx.strokeStyle = "#9b5b12";
-  ctx.stroke();
-
-  // Ampoules lumineuses
+  // 24 small golden bulbs with glass highlights.
   for (let i = 0; i < 24; i++) {
-    const a = -Math.PI / 2 + i * TAU / 24;
-    const x = c + 398 * Math.cos(a);
-    const y = c + 398 * Math.sin(a);
-
+    const angle = -Math.PI / 2 + i * TAU / 24;
+    const x = c + 400 * Math.cos(angle);
+    const y = c + 400 * Math.sin(angle);
     ctx.save();
-    ctx.shadowColor = "#ffb526";
-    ctx.shadowBlur = 18;
-
-    const bulb = ctx.createRadialGradient(
-      x - 2, y - 2, 1, x, y, 9
-    );
-
-    bulb.addColorStop(0, "#fffbe0");
-    bulb.addColorStop(.35, "#ffd66a");
-    bulb.addColorStop(1, "#9a5008");
-
+    ctx.shadowColor = "rgba(255,170,31,.8)";
+    ctx.shadowBlur = 15;
+    const bulb = ctx.createRadialGradient(x - 2, y - 3, 1, x, y, 9);
+    bulb.addColorStop(0, "#ffffff");
+    bulb.addColorStop(.26, "#fff6c3");
+    bulb.addColorStop(.65, "#ffc44c");
+    bulb.addColorStop(1, "#78400a");
     ctx.beginPath();
     ctx.arc(x, y, 7.5, 0, TAU);
     ctx.fillStyle = bulb;
@@ -89,162 +83,137 @@ function draw() {
     ctx.restore();
   }
 
-  // ========================================
-  // SECTEURS DES 7 LOTS
-  // ========================================
-
-  prizes.forEach((p, i) => {
-    const s = -Math.PI / 2 + i * arc;
-    const e = s + arc;
-
-    const g = ctx.createRadialGradient(
-      c - 55, c - 65, 65, c, c, r
-    );
-
-    if (i % 2) {
-      g.addColorStop(0, "#d9aa52");
-      g.addColorStop(.52, "#9a6827");
-      g.addColorStop(1, "#4b2d0b");
-    } else {
-      g.addColorStop(0, "#3c2b15");
-      g.addColorStop(.55, "#17110a");
-      g.addColorStop(1, "#050403");
-    }
-
+  // Seven individually lit beveled sectors.
+  prizes.forEach((prize, i) => {
+    const start = -Math.PI / 2 + i * arc;
+    const end = start + arc;
+    const middle = start + arc / 2;
+    const gold = i % 2 === 1;
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(c, c);
-    ctx.arc(c, c, r, s, e);
+    ctx.arc(c, c, r, start, end);
     ctx.closePath();
-    ctx.fillStyle = g;
-    ctx.fill();
-
-    // Reflet intérieur
-    ctx.save();
     ctx.clip();
-    ctx.globalAlpha = .20;
 
-    const shine = ctx.createLinearGradient(
-      c - r, c - r, c + r, c + r
-    );
+    const base = ctx.createRadialGradient(c - 90, c - 105, 40, c, c, r + 35);
+    if (gold) {
+      base.addColorStop(0, "#f2c76c");
+      base.addColorStop(.42, "#a46b29");
+      base.addColorStop(.82, "#754315");
+      base.addColorStop(1, "#3e230c");
+    } else {
+      base.addColorStop(0, "#58432a");
+      base.addColorStop(.42, "#21180f");
+      base.addColorStop(.83, "#100d09");
+      base.addColorStop(1, "#060504");
+    }
+    ctx.fillStyle = base;
+    ctx.fillRect(70, 70, 760, 760);
 
-    shine.addColorStop(0, "rgba(255,255,255,0)");
-    shine.addColorStop(.5, "rgba(255,224,151,.55)");
-    shine.addColorStop(1, "rgba(255,255,255,0)");
-
-    ctx.fillStyle = shine;
-    ctx.fillRect(c - r, c - r, r * 2, r * 2);
+    // Directional satin-metal sheen.
+    const light = ctx.createLinearGradient(100, 90, 800, 770);
+    light.addColorStop(0, "rgba(255,255,230,.30)");
+    light.addColorStop(.35, "rgba(255,255,255,0)");
+    light.addColorStop(.65, "rgba(255,221,130,.12)");
+    light.addColorStop(1, "rgba(0,0,0,.35)");
+    ctx.fillStyle = light;
+    ctx.fillRect(70, 70, 760, 760);
     ctx.restore();
 
-    // Séparateurs dorés
+    // Shadow and highlight along the raised dividers.
+    const ex = c + r * Math.cos(start);
+    const ey = c + r * Math.sin(start);
+    ctx.beginPath();
+    ctx.moveTo(c + 3, c + 4);
+    ctx.lineTo(ex + 3, ey + 4);
+    ctx.lineWidth = 9;
+    ctx.strokeStyle = "rgba(0,0,0,.55)";
+    ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(c, c);
-    ctx.lineTo(
-      c + r * Math.cos(s),
-      c + r * Math.sin(s)
-    );
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "#e9bc5b";
+    ctx.lineTo(ex, ey);
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#eec56d";
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(c - 1, c - 1);
+    ctx.lineTo(ex - 1, ey - 1);
+    ctx.lineWidth = 1.3;
+    ctx.strokeStyle = "rgba(255,249,198,.85)";
     ctx.stroke();
 
-    // Montants alignés sur l'axe radial de chaque secteur.
-    // Retourner les textes du côté gauche pour éviter une lecture à l'envers.
-    const middle = s + arc / 2;
-    const textRadius = 263;
+    // Radial text: flip the left-hand side so it is never upside down.
+    const textRadius = 265;
     const tx = c + textRadius * Math.cos(middle);
     const ty = c + textRadius * Math.sin(middle);
-    const textAngle = Math.cos(middle) < 0 ? middle + Math.PI : middle;
-
+    const angle = Math.cos(middle) < 0 ? middle + Math.PI : middle;
     ctx.save();
     ctx.translate(tx, ty);
-    ctx.rotate(textAngle);
+    ctx.rotate(angle);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.shadowColor = "rgba(0,0,0,.9)";
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetY = 3;
-    ctx.fillStyle = "#fff0bd";
-    ctx.font = `900 ${p === 888 ? 48 : 54}px Arial`;
-    ctx.fillText(`${p} $`, 0, p === 888 ? -17 : 0);
-
-    if (p === 888) {
-      ctx.font = "900 20px Arial";
-      ctx.fillStyle = "#ffd76d";
-      ctx.fillText("JACKPOT", 0, 31);
+    ctx.lineJoin = "round";
+    const amount = `${prize} $`;
+    const fontSize = prize === 888 ? 45 : 53;
+    ctx.font = `900 ${fontSize}px Arial`;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(62,33,5,.9)";
+    ctx.shadowColor = "rgba(0,0,0,.75)";
+    ctx.shadowBlur = 7;
+    ctx.shadowOffsetY = 5;
+    ctx.strokeText(amount, 0, prize === 888 ? -17 : 0);
+    ctx.fillStyle = "#fff0bb";
+    ctx.fillText(amount, 0, prize === 888 ? -17 : 0);
+    ctx.shadowColor = "transparent";
+    ctx.shadowOffsetY = 0;
+    if (prize === 888) {
+      ctx.font = "900 19px Arial";
+      ctx.fillStyle = "#ffe18a";
+      ctx.fillText("JACKPOT", 0, 30);
     }
     ctx.restore();
   });
 
-  // Anneaux intérieurs
-  ctx.beginPath();
-  ctx.arc(c, c, r, 0, TAU);
-  ctx.lineWidth = 8;
-  ctx.strokeStyle = "#f1c55e";
-  ctx.stroke();
+  // Raised bevel around the inner face.
+  ring(r + 7, 7, "#5c340e");
+  ring(r + 2, 4, "#fff0a7");
+  ring(r - 7, 2, "rgba(255,227,141,.5)");
 
-  ctx.beginPath();
-  ctx.arc(c, c, r - 10, 0, TAU);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(255,239,176,.72)";
-  ctx.stroke();
-
-  // ========================================
-  // MÉDAILLON CENTRAL
-  // ========================================
-
+  // Central medallion, layered like a machined gold coin.
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,.9)";
   ctx.shadowBlur = 22;
-
-  const hubRim = ctx.createRadialGradient(
-    c - 20, c - 25, 8, c, c, 103
-  );
-
-  hubRim.addColorStop(0, "#fff0a4");
-  hubRim.addColorStop(.35, "#d59a31");
-  hubRim.addColorStop(.72, "#6f3d0b");
-  hubRim.addColorStop(1, "#f0c35b");
-
-  ctx.beginPath();
-  ctx.arc(c, c, 104, 0, TAU);
-  ctx.fillStyle = hubRim;
-  ctx.fill();
+  ctx.shadowOffsetY = 10;
+  circle(110, "#211105");
   ctx.restore();
-
-  const hub = ctx.createRadialGradient(
-    c - 28, c - 32, 5, c, c, 91
-  );
-
-  hub.addColorStop(0, "#54401f");
-  hub.addColorStop(.55, "#17110a");
-  hub.addColorStop(1, "#030302");
-
-  ctx.beginPath();
-  ctx.arc(c, c, 88, 0, TAU);
-  ctx.fillStyle = hub;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(c, c, 78, 0, TAU);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(255,220,130,.42)";
-  ctx.stroke();
-
-  // Couronne et logo 88
+  const hubRim = ctx.createLinearGradient(c - 110, c - 110, c + 110, c + 110);
+  hubRim.addColorStop(0, "#fff3b3");
+  hubRim.addColorStop(.24, "#c38425");
+  hubRim.addColorStop(.48, "#ffe398");
+  hubRim.addColorStop(.75, "#865011");
+  hubRim.addColorStop(1, "#efb950");
+  circle(105, hubRim);
+  ring(101, 3, "#fff1af");
+  circle(92, "#150f09");
+  const hub = ctx.createRadialGradient(c - 28, c - 35, 2, c, c, 91);
+  hub.addColorStop(0, "#564021");
+  hub.addColorStop(.55, "#1c150d");
+  hub.addColorStop(1, "#070504");
+  circle(86, hub);
+  ring(80, 2, "rgba(255,219,123,.55)");
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.shadowColor = "rgba(255,183,47,.45)";
-  ctx.shadowBlur = 12;
-  ctx.fillStyle = "#f4cf77";
-
+  ctx.shadowColor = "rgba(0,0,0,.8)";
+  ctx.shadowBlur = 5;
+  ctx.shadowOffsetY = 3;
+  ctx.fillStyle = "#ffe2a0";
   ctx.font = "900 36px Georgia";
-  ctx.fillText("♛", c, c - 37);
-
+  ctx.fillText("♛", c, c - 36);
   ctx.font = "900 68px Georgia";
-  ctx.fillText("88", c, c + 20);
-
+  ctx.fillText("88", c, c + 22);
   ctx.restore();
 }
-
 draw();
 
 // ========================================
