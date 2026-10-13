@@ -146,14 +146,17 @@ function draw() {
     ctx.strokeStyle = "#e9bc5b";
     ctx.stroke();
 
-    // Montants horizontaux, centrés dans chaque secteur.
-    // Le texte ne tourne pas avec le rayon du secteur.
+    // Montants alignés sur l'axe radial de chaque secteur.
+    // Retourner les textes du côté gauche pour éviter une lecture à l'envers.
     const middle = s + arc / 2;
     const textRadius = 263;
     const tx = c + textRadius * Math.cos(middle);
     const ty = c + textRadius * Math.sin(middle);
+    const textAngle = Math.cos(middle) < 0 ? middle + Math.PI : middle;
 
     ctx.save();
+    ctx.translate(tx, ty);
+    ctx.rotate(textAngle);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.shadowColor = "rgba(0,0,0,.9)";
@@ -161,12 +164,12 @@ function draw() {
     ctx.shadowOffsetY = 3;
     ctx.fillStyle = "#fff0bd";
     ctx.font = `900 ${p === 888 ? 48 : 54}px Arial`;
-    ctx.fillText(`${p} $`, tx, p === 888 ? ty - 16 : ty);
+    ctx.fillText(`${p} $`, 0, p === 888 ? -17 : 0);
 
     if (p === 888) {
       ctx.font = "900 20px Arial";
       ctx.fillStyle = "#ffd76d";
-      ctx.fillText("JACKPOT", tx, ty + 32);
+      ctx.fillText("JACKPOT", 0, 31);
     }
     ctx.restore();
   });
