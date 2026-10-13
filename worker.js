@@ -18,7 +18,7 @@ var PROMO_PRIZES = [
 ];
 
 
-const PROMO_PRIZES = [[30, 70], [40, 20], [50, 9], [88, 1]];
+
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
