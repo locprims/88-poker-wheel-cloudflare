@@ -1,4 +1,4 @@
-const prizes = [8, 18, 28, 38, 48, 88, 888];, canvas=document.getElementById("wheel"),ctx=canvas.getContext("2d"),btn=document.getElementById("spin"),statusEl=document.getElementById("status"),result=document.getElementById("result");
+const prizes = [8, 18, 28, 38, 48, 88, 888]; canvas=document.getElementById("wheel"),ctx=canvas.getContext("2d"),btn=document.getElementById("spin"),statusEl=document.getElementById("status"),result=document.getElementById("result");
 let rotation=0,busy=false;const arc=Math.PI*2/prizes.length;
 function draw(){
   const c=450,r=366,TAU=Math.PI*2;
