@@ -55,11 +55,17 @@ function draw(){
     ctx.save();ctx.translate(c,c);ctx.rotate(s+arc/2);
     ctx.textAlign="right";ctx.textBaseline="middle";
     ctx.shadowColor="rgba(0,0,0,.9)";ctx.shadowBlur=8;ctx.shadowOffsetY=3;
-    ctx.fillStyle="#fff0bd";ctx.font=`900 ${p===88?58:54}px Arial`;
-    ctx.fillText(p+" $",r-52,0);
-    if(p===88){
-      ctx.font="900 21px Arial";ctx.fillStyle="#ffd76d";
-      ctx.fillText("JACKPOT",r-57,38);
+    
+ctx.fillStyle = "#fff0bd";
+ctx.font = `900 ${p === 888 ? 48 : 54}px Arial`;
+ctx.fillText(p + " $", r - 52, 0);
+
+if (p === 888) {
+  ctx.font = "900 21px Arial";
+  ctx.fillStyle = "#ffd76d";
+  ctx.fillText("JACKPOT", r - 57, 38);
+
+
     }
     ctx.restore();
   });
