@@ -1,4 +1,4 @@
-// Force Cloudflare deployment v17
+// Version 20 : montant lisible et message de credit en chinois
 const prizes = [8, 18, 28, 38, 48, 88, 888];
 
 const canvas = document.getElementById("wheel");
@@ -394,6 +394,35 @@ function safeCelebrate(prize) {
     const jackpot = Number(prize) === 888;
 
     amount.textContent = `${prize} $`;
+    // Chiffres standards, sans etirement ni effet qui bouche le centre du 8.
+    Object.assign(amount.style, {
+      fontFamily: 'Arial, "Helvetica Neue", sans-serif',
+      fontWeight: "700",
+      fontStyle: "normal",
+      fontStretch: "normal",
+      letterSpacing: "normal",
+      fontVariantNumeric: "lining-nums proportional-nums",
+      webkitTextStroke: "0px",
+      textShadow: "0 2px 4px rgba(0,0,0,0.35)"
+    });
+    let creditMessage = overlay.querySelector(".win-credit-message");
+    if (!creditMessage) {
+      creditMessage = document.createElement("p");
+      creditMessage.className = "win-credit-message";
+      amount.insertAdjacentElement("afterend", creditMessage);
+    }
+    creditMessage.textContent = "您的奖金将很快存入您的扑克账户。";
+    Object.assign(creditMessage.style, {
+      margin: "12px auto 16px",
+      maxWidth: "30ch",
+      padding: "0 12px",
+      color: "#ffe8ad",
+      fontFamily: '"Microsoft YaHei", "PingFang SC", sans-serif',
+      fontSize: "clamp(14px, 3.8vw, 17px)",
+      fontWeight: "400",
+      lineHeight: "1.6",
+      textAlign: "center"
+    });
 
     label.textContent = jackpot
       ? "★ JACKPOT 888 ★"
