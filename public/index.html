@@ -53,14 +53,33 @@
         <p id="status" class="subtitle" aria-live="polite">正在验证您的抽奖资格…</p>
       </div>
     </div>
-    <section class="wheel-wrap">
-      <div class="pointer"></div>
-      <canvas id="wheel" width="900" height="900"></canvas>
-      <button id="spin" class="spin" type="button" disabled>抽奖</button>
-    </section>
-    <div id="result" class="result" aria-live="polite"></div>
-    <p class="note">抽奖机会需经 88 Poker Club 审核后方可使用。</p>
-  </main>
-  <script src="/static/app.js?v=20-gain-cn"></script>
+   <section class="wheel-wrap">
+  <div class="pointer"></div>
+  <canvas id="wheel" width="900" height="900"></canvas>
+  <button id="spin" class="spin" type="button" disabled>抽奖</button>
+</section>
+
+<div id="result" class="result" aria-live="polite"></div>
+
+<p style="
+  margin: 18px auto;
+  padding: 14px 18px;
+  max-width: 420px;
+  border: 1px solid #d4af37;
+  border-radius: 12px;
+  background: #211a0d;
+  color: #ffe8ad;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: center;
+">
+  您的奖金将于近期发放至您的 88 Poker Club 玩家账户。
+</p>
+
+<p class="note">抽奖机会需经 88 Poker Club 审核后方可使用。</p>
+</main>
+
+<script src="/static/app.js?v=20-gain-cn"></script>
 </body>
 </html>
