@@ -1,4 +1,3 @@
-
 var PRIZES = [
   [8, 82],
   [18, 10],
@@ -191,11 +190,60 @@ async function apiSpin(request, env) {
   }
 }
 
+// Telegram welcome message. Keep TELEGRAM_BOT_TOKEN and TELEGRAM_WEBHOOK_SECRET in Worker secrets.
+const MINI_APP_URL = "https://88-poker-wheel-cloudflare.player-squid1.workers.dev/";
+const WELCOME_IMAGE_URL = "https://88pokerclub.cc/assets/images/weelok.webp";
+
+async function telegramWebhook(request, env) {
+  if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+  if (!env.TELEGRAM_WEBHOOK_SECRET || !env.TELEGRAM_BOT_TOKEN) {
+    return json({ error: "telegram_configuration_missing" }, 503);
+  }
+  if (request.headers.get("X-Telegram-Bot-Api-Secret-Token") !== env.TELEGRAM_WEBHOOK_SECRET) {
+    return new Response("Forbidden", { status: 403 });
+  }
+  let update;
+  try { update = await request.json(); }
+  catch { return json({ error: "invalid_json" }, 400); }
+  const message = update.message;
+  if (message?.chat?.type !== "private" ||
+      !/^\/start(?:@weel_88bot)?(?:\s|$)/i.test(message.text || "")) {
+    return json({ ok: true });
+  }
+  const form = new FormData();
+  form.set("chat_id", String(message.chat.id));
+  form.set("photo", WELCOME_IMAGE_URL);
+  form.set("caption", "欢迎来到88扑克俱乐部！点击 PLAY，开启幸运转盘。");
+  form.set("reply_markup", JSON.stringify({
+    inline_keyboard: [[{ text: "▶️ PLAY", web_app: { url: MINI_APP_URL } }]]
+  }));
+  let response;
+  try {
+    response = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+      method: "POST", body: form
+    });
+    const result = await response.json();
+    if (!response.ok || !result.ok) {
+      console.error("Telegram sendPhoto failed", response.status, result.error_code);
+      return json({ error: "telegram_delivery_failed" }, 502);
+    }
+  } catch {
+    console.error("Telegram sendPhoto request failed");
+    return json({ error: "telegram_delivery_failed" }, 502);
+  }
+  return json({ ok: true });
+}
+
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
     try {
+      if (url.pathname === "/telegram/webhook") {
+        return await telegramWebhook(request, env);
+      }
+
       if (url.pathname === "/api/me" && request.method === "GET") {
         return apiMe(request, env);
       }
